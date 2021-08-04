@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         DrrrkariHelperTools
 // @namespace    http://tampermonkey.net/
-// @version      0.1
-// @description  try to take over the world!
+// @version      0.2
+// @description  汚いコードで作られたヘルパーツール
 // @author       wtf
 // @match        *://drrrkari.com/room*
 // @icon         https://www.google.com/s2/favicons?domain=drrrkari.com
@@ -24,6 +24,9 @@
     var drrrHelperTools = document.createElement("li");
     var childTools = document.createElement("u");
     var childToolsHTML = document.createElement("span");
+
+    var input = document.querySelector("#message .inputarea textarea");
+    var submit = document.querySelector("#message .submit input");
 
     childTools.innerText = "Helper";
 
@@ -66,8 +69,20 @@
         copied.innerText = "[Copied!]";
         copied.setAttribute("class", "copied");
         if (document.querySelector(".copied") == null) {
-            childToolsHTML.insertBefore(copied, childToolsHTML.firstChild)
+            e.target.appendChild(copied)
             setTimeout(() => childToolsHTML.removeChild(copied), 2000);
+        }
+    }
+
+    var playing = document.querySelector(".playing");
+    playing.onclick = e => {
+        sendChat(e.target.innerText);
+        var sended = document.createElement("span");
+        sended.innerText = "[Sended!]";
+        sended.setAttribute("class", "sended");
+        if (document.querySelector(".sended") == null) {
+            e.target.appendChild(sended)
+            setTimeout(() => childToolsHTML.removeChild(sended), 2000);
         }
     }
 
@@ -89,7 +104,13 @@
         let minutes = Math.floor(totalSeconds / 60);
         totalSeconds %= 60;
         let seconds = Math.floor(totalSeconds);
-        return `${days} days ${hours} hours ${minutes} minutes ${seconds} seconds`;
+        return `${days}日${hours}時間${minutes}分${seconds}秒`;
+    }
+
+    function sendChat(text) {
+        if (!text) return;
+        input.value = text;
+        submit.click();
     }
 })();
 
