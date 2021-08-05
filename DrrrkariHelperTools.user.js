@@ -15,6 +15,7 @@
 (function() {
     'use strict';
     var playingTime = 0;
+
     var $ = window.$;
     var { post } = axios;
 
@@ -49,14 +50,11 @@
     childToolsHTML.style.margin = "0";
     childToolsHTML.style.padding = "0";
     childToolsHTML.innerHTML = `\
-      <span>durarara-like-chat1: </span><span class="dlc">${parsed["durarara-like-chat1"]}</span><br\>\
-      <span>playing: </span><span class="playing">idk</span>\
+      <span>durarara-like-chat1: </span><span class="dlc">${parsed["durarara-like-chat1"]}</span><br/>\
+      <span>playing: </span><span class="playing">idk</span><br/>\
+      <input type="checkbox" class="roomkeeper" name="roomkeeper"><label for="roomkeeper">RoomKeeper</label>\
     `;
 
-
-    setInterval(()=>{
-        document.querySelector(".playing").innerText = timestampToDate((playingTime++) * 1024);
-    }, 1000);
 
     messageBoxInner.appendChild(childToolsHTML);
     drrrHelperTools.appendChild(childTools);
@@ -86,6 +84,20 @@
         }
     }
 
+    setInterval(()=>{
+        document.querySelector(".playing").innerText = timestampToDate((playingTime++) * 1024);
+    }, 1000);
+
+    var roomKeeper = document.querySelector(".roomkeeper");
+    var latestStr = "";
+    setInterval(()=>{
+        if (!roomKeeper.checked) return;
+        var strs = [",", ".", "あ", "、"].filter(a => a != latestStr);
+        var rndStr = strs[Math.floor(Math.random() * strs.length)];
+        latestStr = rndStr;
+        sendChat(rndStr);
+    }, 300000);
+
     function copyFn(text) {
         var ta = document.createElement("textarea");
         ta.value = text;
@@ -111,6 +123,7 @@
         if (!text) return;
         input.value = text;
         submit.click();
+        console.log("send: ", text);
     }
 })();
 
